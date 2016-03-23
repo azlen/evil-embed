@@ -1,0 +1,94 @@
+<html>
+<head>
+	<style>
+		html, body{
+			margin:0;
+			padding:0;
+			width:100%;
+			height:100%;
+		}
+		body{
+			display:flex;
+			align-items:center;
+		}
+		#container{
+			margin:auto;
+			width:640px;
+		}
+		#player{
+			position:relative;
+			width:640px;
+			overflow:hidden;
+		}
+		#blocker{
+			position:absolute;
+			top:0;
+			left:0;
+			width:640px;
+			height:360px;
+			background:transparent;
+		}
+		#blocker.notloaded{
+			background:#000;
+		}
+		#video{
+			width:860px;
+			margin-left:-100px;
+		}
+	</style>
+</head>
+<body>
+	<script src="https://www.youtube.com/iframe_api"></script>
+	<div id="container">
+		<h1>Evil Video Loader</h1>
+		<p><b>description if you don't get it:</b> this basically loads a YouTube video and strips away everything relating to YouTube from the video (even the things that they do not allow you to remove such as the YouTube logo, and the play icon/pause icon/fullscreen on click/click/doubleclick)</p>
+		(click to play/pause once video is loaded)
+		<div id="player">
+			<div id="video"></div>
+			<div id="blocker" onclick="togglevid()" class="notloaded"></div>
+		</div>
+		(can add custom controls later)
+	</div>
+	<script>
+		var player;
+		function onYouTubeIframeAPIReady() {
+		    player = new YT.Player('video', {
+		        videoId: 't0URLGsf1e0',
+		        playerVars: {
+		            controls: 0,
+		            autoplay: 0,
+		            disablekb: 1,
+		            enablejsapi: 1,
+		            iv_load_policy: 3,
+		            cc_load_policy: 0,
+		            modestbranding: 1,
+		            showinfo: 0,
+		            rel: 0,
+		        }
+		    });
+		    player.addEventListener("onReady",       "onYouTubePlayerReady");
+  			player.addEventListener("onStateChange", "onYouTubePlayerStateChange")
+		}
+		function onYouTubePlayerReady(){
+			player.playVideo();
+		}
+		var o = false;
+		function onYouTubePlayerStateChange(event){
+			console.log(event.data)
+			if(event.data == 1 && o == false){
+				o = true;
+				player.pauseVideo()
+				document.querySelector('.notloaded').classList.remove('notloaded')
+			}
+		}
+		function togglevid(){
+			console.log('toggle')
+			if(player.getPlayerState() > 1){
+				player.playVideo()
+			}else if(player.getPlayerState() == 1){
+				player.pauseVideo()
+			}
+		}
+	</script>
+</body>
+</html>
